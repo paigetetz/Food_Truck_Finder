@@ -19,11 +19,15 @@ function Map() {
       .then((response) => response.json())
       .then((data) => setFoodTrucks(data));
   }, []);
+  console.log(foodTrucks.location);
 
   const handleSearch = (term) => {
     setSearch(term);
   }
-  const filteredFoodTrucks = foodTrucks.filter((foodTruck) => foodTruck.address.toLowerCase().includes(search.toLowerCase()));
+  const filteredFoodTrucks = foodTrucks.filter(truck => {
+    return truck.address.toLowerCase().includes(search.toLowerCase())
+          // truck.locationdescription.toLowerCase().includes(search.toLowerCase())
+  })
 
   return (
     <div className="Map">
@@ -39,9 +43,9 @@ function Map() {
           <Marker key={truck.objectid} icon={foodTruckIcon} position={[truck.latitude, truck.longitude]}>
           <Popup>
             <div className='text-md'>
-              <p>{truck.applicant}</p>
-              <p>{truck.address}</p>
-              <p>{truck.fooditems}</p>
+              <p className='text-lg'>{truck.applicant}</p>
+              <p>Address: {truck.address}</p>
+              <p>Cuisine: {truck.fooditems}</p>
             </div>
           </Popup>
           </Marker>
