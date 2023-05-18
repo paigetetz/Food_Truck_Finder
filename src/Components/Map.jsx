@@ -20,18 +20,22 @@ function Map() {
       .then((data) => setFoodTrucks(data));
   }, []);
 
-  const handleSearch = (e) => {
-    setSearch(e.target.value);
+  const handleSearch = (term) => {
+    setSearch(term);
   }
+  const filteredFoodTrucks = foodTrucks.filter((foodTruck) => foodTruck.address.toLowerCase().includes(search.toLowerCase()));
 
   return (
     <div className="Map">
+      <div>
+        <Search onSearch={handleSearch} />
+      </div>
       <MapContainer center={[37.7749, -122.4194]} zoom={13} style={{ height: "100vh", width: "100%" }}>
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         />
-        {foodTrucks.map((truck) => (
+        {filteredFoodTrucks.map((truck) => (
           <Marker key={truck.objectid} icon={foodTruckIcon} position={[truck.latitude, truck.longitude]}>
           <Popup>
             <div className='text-md'>
