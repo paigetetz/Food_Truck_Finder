@@ -24,23 +24,24 @@ function Map() {
   const handleSearch = (term) => {
     setSearch(term);
   }
-  const filteredFoodTrucks = foodTrucks.filter(truck => {
-    return truck.address.toLowerCase().includes(search.toLowerCase())
-          // truck.locationdescription.toLowerCase().includes(search.toLowerCase())
-  })
+  const filteredFoodTrucks = foodTrucks.filter((foodTruck) => {
+    const address = foodTruck.address || '';
+    const locationDescription = foodTruck.locationdescription || '';
+    return address.toLowerCase().includes(search.toLowerCase())
+      || locationDescription.toLowerCase().includes(search.toLowerCase());
+  });
 
   return (
-    <div className="Map">
-      <div>
-        <Search onSearch={handleSearch} />
-      </div>
-      <MapContainer center={[37.7749, -122.4194]} zoom={13} style={{ height: "100vh", width: "100%" }}>
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        />
-        {filteredFoodTrucks.map((truck) => (
-          <Marker key={truck.objectid} icon={foodTruckIcon} position={[truck.latitude, truck.longitude]}>
+    <>
+    <Search onSearch={handleSearch} />
+    <div className="flex justify-center items-center h-screen">
+    <MapContainer center={[37.7749, -122.4194]} zoom={13} style={{ height: "80%", width: "80%" }}>
+      <TileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      />
+      {filteredFoodTrucks.map((truck) => (
+        <Marker key={truck.objectid} icon={foodTruckIcon} position={[truck.latitude, truck.longitude]}>
           <Popup>
             <div className='text-md'>
               <p className='text-lg'>{truck.applicant}</p>
@@ -48,10 +49,11 @@ function Map() {
               <p>Cuisine: {truck.fooditems}</p>
             </div>
           </Popup>
-          </Marker>
-        ))}
-      </MapContainer>
-    </div>
+        </Marker>
+      ))}
+    </MapContainer>
+  </div>
+  </>
   );
 }
 
